@@ -35,4 +35,4 @@ github_username: roby-ianny
 #   - vendor/gems/
 #   - vendor/ruby/
 
-theme: jekyll-theme-hacker
+theme: jekyll-theme-minima
