@@ -7,8 +7,9 @@ Sono Roberto Pio Iannello, uno studente di Ingegneria Informatica presso l'unive
 - Diploma Liceo Scientifico Opzione Scienze Applicate [2021]
   - Liceo OSA E.Montale di Bordighera
   - Valutazione `100/100`
-- Laurea Triennale in Ingengeria Informatica [in corso]
+- Laurea Triennale in Ingengeria Informatica [2025]
   - Università degli Studi di Genova
+  - Tesi: [Analisi del traffico di rete, dalle CTF alla realtà](tesi-triennale)
 - Laurea Magistrale in Computer Engineering [in corso]
   - Università degli Studi di Genova
 
