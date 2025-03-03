@@ -21,9 +21,9 @@ Un altro motivo, che sarà argomento principale di questa tesi, è la costruzion
 
 Questo tipo di soluzione presenta una serie di vantaggi che si applicano anche nel mondo reale.
 
-Il primo vantaggio è un minor tempo di esposizione, questo perché modificare il codice per sistemare una vulnerabilità può richiedere tempo, e in questo periodo di tempo il sistema risulta essere ancora vulnerabile.
+Il primo vantaggio è un minor tempo di esposizione, questo perché modificare il codice per risolvere una vulnerabilità può richiedere tempo, e in questo periodo di tempo il sistema risulta essere ancora vulnerabile.
 
-Il secondo vantaggio è un downtime nullo, dato che non è necessario riavviare il servizio o ricompilare del codice per eliminare la vulnerabilità.
+Il secondo vantaggio è un downtime quasi nullo, dato che non è necessario riavviare il servizio o ricompilare del codice per eliminare la vulnerabilità.
 
 Il terzo vantaggio si applica in caso di utilizzo di software legacy o sotto licenza proprietaria, perché in quel caso il codice del servizio non risulta modificabile e quindi il virtual patching risulta essere l’unica soluzione attuabile.
 
@@ -44,21 +44,24 @@ for (const file of files) {
     });
 }
 ```
-Questo viene fatto utilizzando la funzione “decode” che converte il contenuto `base64` del file in un blob prima di memorizzarlo ne database, ma questo approccio risulta vulnerabile a SQL injection.
+Il problema sta nel modo in cui viene inserito nel db il contenuto del file, questo viene fatto utilizzando la funzione “decode” che converte il contenuto `base64` del file in un blob prima di memorizzarlo ne database, ma questo approccio risulta vulnerabile a SQL injection.
 
-Infatti, codificando in `base64` il seguente payload, verrà inserito all'interno del campo "content" del file il risultato della query. 
+Infatti, codificando in `base64` un payload come il seguente, quando il file verrà salvato nel database il suo contenuto verrà rimpiazzato dal risultato della query sql.
 
 ```text
 ' || (SELECT string_agg(answer, ',') FROM \"Answers\" WHERE id='ANSWER_ID_TO_LEAK'),'escape')) --
 ```
 
+Ho deciso quindi di effettuare una simulazione e verificare se fosse possibile bloccare attacchi di questo tipo applicando una soluzione di virtual patching
+
 ## Simulazione
 
-Per simulare l’ambiente di gara, è necessario creare una macchina virtuale, in questo caso ho scelto una Ubuntu server (`24.04`), che dovrà avere installati i seguenti programmi:
+Per simulare l’ambiente di gara, è necessario creare una macchina virtuale, in questo caso ho scelto una Ubuntu server (`24.04`), con installati i seguenti pacchetti e gruppi di pacchetti:
 - `docker`
 - `python`
 - `pip`
 - `build-essential`
+
 Oltre ad avere un server ssh per permettere l’accesso da remoto (oppure si può utilizzare una VM dotata di ambiente desktop)
 
 Una volta configurata la macchina virtuale e installati i pacchetti necessari, si può passare al deployment del servizio, clonando la [repository ufficiale](https://github.com/CyberChallengeIT/CyberChallenge.IT-AD-2024/tree/master) contente i servizi all’interno della macchina virtuale, si può eseguire il servizio nel seguente modo:
@@ -76,6 +79,7 @@ chmod +x *.py # aggiungo i permessi di esecuzione per gli script python
 ./checker.py dev # eseguo il checker, che inserisce la flag nel servizio
 cat ./flagid.json # per prendere l'id del form contenente la flag
 ```
+
 *Si suppone che la repository sia stata clonata in `/home` nella maccina virtuale*
 
 Eseguiamo ora una cattura del traffico utilizzando `tcpdump`
@@ -85,7 +89,7 @@ sudo tcpdump -w ./traffic.pcap -i enp1s0 not port 22 > /dev/null 2> /dev/null
 
 Il traffico viene salvato all'interno del file [`traffic.pcap`](./traffic/traffic.pcap), non viene considerato il traffico per il protocollo `shh` (`not port 22`)
 
-Una volta lanciato `tcpdump`, eseguiamo un attacco da un’altra macchina, clonando la stessa repository, si lancia l’exploit 
+Una volta lanciato `tcpdump`, eseguiamo un attacco da un’altra macchina, clonando la stessa repository, si lancia l’exploit
 
 *Si suppone che la repository sia stata clonata su una macchina linux in `/home`*
 ```bash
@@ -113,19 +117,19 @@ Mitmproxy è inoltre espandibile tramite script Python, noi utilizzeremo uno scr
 ```python
 import re
 
-def response(flow):
+def request(flow):
     if re.findall(r'SELECT', flow.request.text):
-        flow.response.headers["newheader"] = "sqli" 
+        flow.request.headers["newheader"] = "sqli"
 ```
 
 A questo punto possiamo lanciare mitmproxy.
 ```bash
-# installazione 
+# installazione
 mkdir mitmproxy
 curl -w "https://downloads.mitmproxy.org/11.1.0/mitmproxy-11.1.0-linux-x86_64.tar.gz" -o mitmproxy.tar.gz
 tar -xzf mitmproxy.tar.gz
 # inseriamo lo script python nella stessa cartella
-./mitmweb --no-ssl-insecure --web-host 192.168.122.45 -s filter.py 
+./mitmweb --no-ssl-insecure --web-host 192.168.122.45 -s filter.py
 ```
 
 Una volta fatto partire, mitmproxy eseguirà due servizi, il primo è il reverse proxy, in esecuzione sulla porta `8080` e il secondo sarà la web ui alla quale collegarsi per poter gestire il proxy sulla porta `8081`.
@@ -144,9 +148,9 @@ Utilizzeremo quindi `iptables` per reindirizzare il traffico dalla porta 3001 al
 ```bash
 sudo sysctl -w net.ipv4.ip_forward=1 # abilitiamo l'ip forwarding
 # inoltriamo il traffcio in ingresso dalla porta 3001 alla porta 8080
-sudo iptables --table nat --append PREROUTING --protocol tcp --dport 3001 --jump REDIRECT --to 8080 
+sudo iptables --table nat --append PREROUTING --protocol tcp --dport 3001 --jump REDIRECT --to 8080
 # eliminiamo la regola docker che reindirizzava il traffico dalla porta 3001 al container
-sudo iptables -t nat -D DOCKER 4 
+sudo iptables -t nat -D DOCKER 4
 ```
 
 
