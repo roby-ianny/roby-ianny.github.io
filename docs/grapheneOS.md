@@ -1,14 +1,14 @@
 # Un mese con [GrapheneOS](https://grapheneos.org/)
 
-Di recente ho fatto un esperimento, ho installato GrapheneOS sul mio dispositivo principale, un Google Pixel 6,  e l'ho utilizzato per circa un mese, al termine di questa esperienza sono tornato alla versione stock, in questo post vorrei raccontarvi cosa ho imparato da questa esperienza e perchè sono tornato ad Android Stock.
+Di recente ho fatto un esperimento, ho installato GrapheneOS sul mio dispositivo principale, un Google Pixel 6,  e l'ho utilizzato per circa un mese, al termine di questa esperienza sono tornato alla versione stock, in questo post vorrei raccontarvi cosa ho imparato da questa esperienza e perché sono tornato ad Android Stock.
 
 ## Cos'è GrapheneOS?
 
-GrapheneOS è una custom ROM android (disponibile solo per i dispositivi della serie Google Pixel nel momento in cui scrivo) che migliora molti aspetti di Android a livello di privacy e sicurezza.
+GrapheneOS è una custom ROM Android (disponibile solo per i dispositivi della serie Google Pixel nel momento in cui scrivo) che migliora molti aspetti di Android a livello di privacy e sicurezza.
 
 ### Chi può utilizzarlo?
 
-A mio parere questa ROM non è solo per gli appassionati di sicurezza, chiunque può utilizzarla vista la semplicità dell'[installazione](https://grapheneos.org/install/) (basta un browser basato su chromium), la vedo utile per chi non vuole dipendere dai servizi Google oppure per chi vuole utilizzare lo smartphone in maniera più consapevole.
+A mio parere questa ROM non è solo per gli appassionati di sicurezza, chiunque può utilizzarla vista la semplicità dell'[installazione](https://grapheneos.org/install/) (basta un browser basato su Chromium), la vedo utile per chi non vuole dipendere dai servizi Google oppure per chi vuole utilizzare lo smartphone in maniera più consapevole.
 
 Appena si installa il sistema operativo, i servizi Google non sono presenti, ma si possono comunque installare tramite pochi tap nel caso fosse necessario, in tal caso viene installato solo quel che serve per far funzionare il Play Store in modo da scaricare le applicazioni da lì.
 
@@ -17,8 +17,8 @@ Un problema che ho avuto era lo speech-to-text che non funzionava su Duolingo, h
 
 ## Cosa mi è piaciuto e cosa ho imparato da questa esperienza
 
-La possibilità di gestire più permessi delle app è una delle funzinalità che ho più apprezzato, in particolare la possibilità di scegliere se un app può accedere a internet o meno. 
-Disabilitare l'accesso a internet può essere utile per la privacy perchè si può evitare la telemetria da parte di alcune applicazioni dove l'accesso ad internet non è strettamente necessario, io ad esempio ho disabilitato l'accesso alla rete ad applicazioni come GBoard, Google Calendar e alcuni giochi offline (evitando anche le pubblicità).
+La possibilità di gestire più permessi delle app è una delle funzionalità che ho più apprezzato, in particolare la possibilità di scegliere se un app può accedere a internet o meno. 
+Disabilitare l'accesso a internet può essere utile per la privacy perché si può evitare la telemetria da parte di alcune applicazioni dove l'accesso a internet non è strettamente necessario, io ad esempio ho disabilitato l'accesso alla rete ad applicazioni come GBoard, Google Calendar e alcuni giochi offline (evitando anche le pubblicità).
 
 Per chi è interessato ai dumb-phone, al termine dell'installazione del sistem operativo, sul telefono ci sono solo pochissime applicazioni essenziali come: telefono,  messaggi, fotocamera e poco altro.
 Questo mi ha aiutato per utilizzare il telefono in maniera più consapevole, installando solo le poche applicazioni che mi servivano realmente.
