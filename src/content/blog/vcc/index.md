@@ -1,7 +1,7 @@
 ---
 title: "Virtualization and Cloud Computing, cosa ho imparato"
 description: "In questo post vorrei esporre alcuni concetti chiave imparati al corso di Virtualization and Cloud Computing"
-date: "28/01/2026"
+date: "Jan 28 2026"
 draft: true
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Binary Analysis and Secure Coding, pipeline per l'analisi di software"
 description: "In questo post vorrei esporre alcuni concetti chiave imparati al corso di Binary Analysis and Secure Coding"
-date: "7/02/2026"
+date: "Feb 7 2026"
 draft: false
 ---
 
