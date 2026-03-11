@@ -1,85 +1,58 @@
 ---
-title: "Virtualization and Cloud Computing, concetti chiave"
-description: "In questo post vorrei esporre alcuni concetti chiave che ho appreso seguendo il corso di Virtualization and Cloud Computing"
-date: "Feb 17 2026"
-draft: true
+title: "Virtualization and Cloud Computing, presentazione progetto"
+description: "In questo articolo una breve descrizione e interpretazione del progetto di virtualization and cloud computin fatta con il collega Lorenzo Massone"
+date: "Mar 11 2026"
+draft: false
 ---
 
-A breve dovrò sostenere l'esame di Virtualization and Cloud Computing. In questo corso, abbiamo esplorato come costruire e gestire un insieme di servizi che girano su diversi sistemi, utilizzando sistemi di gestione come Vagrant, Ansible e Docker Swarm.
+In questo articolo, riporterò in italiano il contenuto delle slides utilizzate per presentare il progetto
 
-Per ogni argomento presentato nel corso, farò un breve riassunto, utile quindi anche come ripasso pre-esame anche per chi dovrà affrontare questo esame :)
+## Chi ha realizzato il progetto
 
-## Introduzione alla [virtualizzazione](https://en.wikipedia.org/wiki/Virtualization?useskin=vector)
+|                                                                                                                                                                                                                            |                                                                                                                                                                                                                 |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <img src="https://blush.design/api/download?shareUri=XaO6d5Fc6LCZnucG&c=Skin_0%7Effdbb4&w=800&h=800&fm=png" alt="Lorenzo Massone Avatar" class="inline-block w-8 h-8 mr-1 align-text-center" /> Lorenzo     Massone        | <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" class="inline-block w-4 h-4 mr-1 align-text-center" /> [github.com/cunoucu](https://github.com/cunoucu)       |
+| <img src="https://blush.design/api/download?shareUri=qYjdfeU4STNfoYmk&c=Skin_0%7Effdbb4&w=800&h=800&fm=png" alt="Roberto Pio Iannello Avatar" class="inline-block w-8 h-8 mr-1 align-text-center" />  Roberto Pio Iannello | <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" class="inline-block w-4 h-4 mr-1 align-text-center" /> [github.com/roby_ianny](https://github.com/roby_ianny) |
 
-L'obiettivo della virtualizzazione, è quello di astrarre le risorse fisiche in maniera flessibile, sicura e gestibile. Consentendo eventualmente di oltrepassare i limiti fisici (es. condivisione di risorse, overprovisioning, ...) 
+## Panoramica del progetto
 
-Ci sono tre principali tecniche di virtualizzazione:
-- Multiplexing
-    - Una risorsa fisica viene resa disponibile a più entità virtuali
-    - Un esempio, è lo stesso disco che viene condiviso tra diverse macchine virtuali
-- Aggregazione
-    - Più risorse fisiche vengono aggregate in una singola risorsa virtuale
-    - Un esempio è RAID, il RAID controller aggrega diversi dischi rappresentandoli come un'unica unità
-- Emulazione
- - Espone una risorsa virtuale che corrisponde a un dispositivo fisico, anche se il dispositivo fisico reale non c'è. 
- - Per esempio l'emulazione di un processore ARM con un processore amd64
+Il progetto consiste nella realizzazione di un'infrastruttura cloud utilizzando tecnologie di virtualizzazione. 
 
-## [Macchine Virtuali](https://en.wikipedia.org/wiki/Virtual_machine?useskin=vector)
+In particolare, i servizi esposti sono: 
+- **Forgejo**: servizio di hosting per repository git 
+- **Authelia**: Servizio di autenticazione e autorizzazione
+- ** Traefik**: Reverse proxy e load balancer
+- **Prometheus e Loki**: Servizi di monitoraggio 
+- **Grafana**: Per visualizzare i dati monitorati da Prometheus e Loki
 
-Nel corso, abbiamo visto due tipi di macchine virtuali:
-- Lightweight VMs
-    - Si basano su meccanismi di isolamento dell'hardware e del software per fare in modo che le applicazioni vengano eseguite direttamente sul processore rimanendo isolate dal sistema operativo sottostante
-    - Un esempio sono i container (v. [Docker](https://en.wikipedia.org/wiki/Docker_(software)?useskin=vector) o [Podman](https://en.wikipedia.org/wiki/Podman?useskin=vector))
-- System Level VM
-    - Forniscono un'istanza virtualizzata dell'hardware di un computer, con la possibilità di far girare un sistema operativo standard con un isolamento completo dal resto del sistema (a differenza dei container, in cui il kernel è lo stesso del sistema host)
-    - Utilizzano un [Hypervisor](https://en.wikipedia.org/wiki/Hypervisor?useskin=vector), un particolare tipo di software che si occupa specificamente di virtualizzazione minimizzando gli overhead, combinando tecniche di [multiplexing e emulazione](#introduzione-alla-virtualizzazione)
-    - Un esempio è una macchina virtuale Linux che gira su un PC Windows con VMware Workstation come Hypervisor
+![Panoramica del progetto](./img/overview.png)
 
-Pre brevità, omettero alcuni concetti come il [teorema di Popek e Goldberg](https://en.wikipedia.org/wiki/Popek_and_Goldberg_virtualization_requirements), la [paravirtualizzazione](https://en.wikipedia.org/w/index.php?title=Virtualization&useskin=vector#Paravirtualization) e la virtualizzazione della memoria (in particolare il [memory balooning](https://en.wikipedia.org/wiki/Memory_ballooning?useskin=vector))
+## Cosa abbiamo imparato
 
-## Linux, le basi
+Abbiamo imparato che l'Infrastructure as Code è come una matrioska, nel nostro caso, lo strato più esterno, ovvero le macchine virtuali, gestite da Vagrant.
+Una di queste virtual machine, chiamata `controlnode`, svolgeva il ruolo di nodo di controllo per Ansible, per automatizzare la configurazione di se stesso e delle altre due macchine virtuali collegate: `node1` e `node2`.
+`node1` a sua volta svolge il ruolo di manager di un Docker Swarm (oltre che di worker), mentre `node2` è un worker del cluster.
 
-Linux è un argomento molto ampio, cito un paio di risorse utili consigliate dai docenti del corso per evitare di rendere questo capitolo molto lungo, dedicherò in seguito degli articoli che parlano specificatamente di Linux:
-- [20 Best Linux Books You Can Download For Free Legally](https://itsfoss.com/learn-linux-for-free/)
-- [Manuale di Bash](https://www.gnu.org/software/bash/manual/)
+![Strati di virtualizzazione](./img/matrioska.png)
 
-## Automazione e Infrastructure as Code
-### Costruire e gestire ambienti virtuali con Vagrant
+## Difficoltà incontrate
 
-[Vagrant](https://en.wikipedia.org/wiki/Vagrant_(software)?useskin=vector) è un software che permette di creare e gestire ambienti virtuali garantendo portabilità e riproducibilità.
+### Jinja2: Explicit is better than implicit
 
-Questo ci porta al concetto di [Infrastructure as Code](#automazione-e-infrastructure-as-code), un paradigma che implementa la riproducibilità descrivendo gli ambienti nella loro completezza usando solo il codice. Diviso in tre fasi:
-1. Costruzione dell'immagine
-2. [Provisioning](https://en.wikipedia.org/wiki/Provisioning_(technology)?useskin=vector)
-3. Gestione delle configurazioni
+Abbiamo lavorato partendo dal presupposto che Jinja2 avrebbe renderizzato qualsiasi file che utilizzasse la sua sintassi, ma abbiamo scoperto che non è così. 
+Dopo ore di debug e un'analisi approfondita della documentazione, possiamo confermare che non è così, perchè per applicare i template bisogna indicarlo all'interno del task di Ansible.
 
-Vagrant si occupa dei primi due passaggi, ovvero si occupa di istanziare e connettere le macchine virtuali (o le risorse sul cloud).
-È possibile farlo con un [`Vagrantfile`](https://developer.hashicorp.com/vagrant/docs/vagrantfile), attraverso il quale si può definire l'immagine di partenza, le risorse da allocare per quell'immagine, l'hypervisor da utilizzare, la configurazione di rete e gli eventuali script o comandi da eseguire dopo l'avvio.
+### Traefik lab-hell
 
-Una volta creato il `Vagrantfile` si possono eseguire i seguenti comandi (all'interno della cartella in cui si trova il file)
+C'è stata una fase in cui tutti i servizi erano up and running, ma non riuscivamo ad accedervi. Grazie al consiglio di una collega, abbiamo scoperto di aver dimenticato di inserire i labels di traefik per Authelia e Forgejo, e quindi Traefik non sapeva come instradare le richieste verso questi servizi.
 
-```bash
-vagrant up --provision # Esegue il setup delle macchine virtuali e comandi di provisioning
-vagrant halt # Blocca la/le macchine virtuali
-vagrant destroy # Spegne la VM, la elimina e elimina l'immagine di partenza
-vagrant snapshot save nomesnapshot # Crea una snapshot dello stato attuale della/delle VM
-vagrant snapshot restore nomesnapshot # Riporta la/le VM allo stato della snapshot
-``` 
+## Log Insight: Forgejo
 
-### [Ansible](https://www.redhat.com/it/topics/automation/learning-ansible-tutorial)
+Abbiamo creato diverse Dashboard per i vari servizi e per riportare lo stato del sistema, qui riportiamo solo quella di forgejo, dato che nella nostra interpretazione è il servizio principale. 
 
-[Ansible](https://it.wikipedia.org/wiki/Ansible_(software)?useskin=vector) si occupa del provisioning e della fase finale, ovvero quella della gestione delle configurazioni, è uno strumento molto potente e anch'esso garantisce la riproducibilità.
+![Si, abbiamo usato le winx come utenti di test](./img/forgejo.png)
 
-Funziona nel seguente modo, attraverso dei file `yaml`, si definisce in modo dichiarativo lo stato desiderato delle macchine, un Nodo di controllo si occupa di eseguire questa automazione, connettendosi alle altre macchine da configurare tramite SSH o altri protocolli.
+## Possibili miglioramenti
 
-Gli hosts ai quali il control node si deve connettere, sono definiti nell'[inventario](https://docs.ansible.com/projects/ansible/latest/inventory_guide/index.html), mentre le azioni da eseguiri sono definite nei [playbook](https://www.redhat.com/it/topics/automation/what-is-an-ansible-playbook).
-
-
-## Containers
-
-## Containers Orchestrations e Clustering
-
-## Autenticazione
-
-## Monitoraggio
-
+- Grazie al design scalabile, si potrebbero aggiungere ulteriori nodi al cluster Docker Swarm per aumentare la capacità di elaborazione e migliorare la tolleranza ai guasti.
+- Sia Forgejo che Grafana hanno un proprio sistema di autenticazione integrato, che potrebbe essere rimosso per centralizzare l'accesso con Authelia.
